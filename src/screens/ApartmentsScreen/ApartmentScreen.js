@@ -7,32 +7,29 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import Strings from '../Theme/Strings';
 import Images from '../Theme/Images';
+import Colors from '../Theme/Colors';
 import {getRentById} from '../../Api/Yelp';
 import {useNavigation} from '@react-navigation/native';
+import roots from '../../Navigator/roots';
 
 const {width} = Dimensions.get('window');
-const height = (width * 100) / 60;
 const change = ({nativeEvent}, setCurrentDot) => {
   const slide = Math.ceil(
     nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width,
   );
-  setCurrentDot(prevState => {
-    return slide;
-  });
+  setCurrentDot(slide);
 };
 const ApartmentScreen = ({route}) => {
-  const navigation = useNavigation();
-  const navigateToHolder = id => {
-    navigation.navigate('HolderProfile', {id});
-  };
-  const [currentDot, setCurrentDot] = useState(2);
-  const apartmentID = route.params.id;
+  const [currentDot, setCurrentDot] = useState(0);
   const [apartment, setApartment] = useState(null);
+  useEffect(() => {
+    fetchApartment(route.params.id);
+    setCurrentDot(0);
+  }, [route.params.id]);
   const fetchApartment = useCallback(
     async apartmentID => {
       const data = await getRentById(apartmentID);
@@ -40,12 +37,10 @@ const ApartmentScreen = ({route}) => {
     },
     [route.params.id],
   );
-
-  useEffect(() => {
-    fetchApartment(route.params.id);
-    setCurrentDot(0);
-  }, [route.params.id]);
-
+  const navigation = useNavigation();
+  const navigateToHolder = id => {
+    navigation.navigate(roots.HolderProfile, {id});
+  };
   const renderSpecs = items =>
     items.specifications.map(item => {
       return (
@@ -65,7 +60,7 @@ const ApartmentScreen = ({route}) => {
   const renderData = useCallback(
     (item, setCurrentDot) => {
       return (
-        <View style={{flex: 1, backgroundColor: 'red'}}>
+        <View style={styles.mainView}>
           <ScrollView
             scrollEnabled={true}
             showsVerticalScrollIndicator={false}
@@ -105,8 +100,7 @@ const ApartmentScreen = ({route}) => {
                 <Text style={styles.summaryText}>
                   {item.summaryDescription}
                 </Text>
-
-                <View style={{flexDirection: 'row'}}>{renderStars(item)}</View>
+                <View style={styles.starsView}>{renderStars(item)}</View>
               </View>
               <TouchableOpacity
                 style={styles.profilePicture}
@@ -168,7 +162,7 @@ const ApartmentScreen = ({route}) => {
 
 const styles = ScaledSheet.create({
   mainView: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: Colors.white,
     flex: 1,
   },
   imageScrollView: {
@@ -192,11 +186,11 @@ const styles = ScaledSheet.create({
     alignSelf: 'center',
   },
   dotsTextStyle: {
-    color: '#888',
+    color: Colors.lightGrey,
     margin: '4@s',
   },
   dotsActiveTextStyle: {
-    color: '#fff',
+    color: Colors.white,
     margin: '4@s',
   },
   summaryView: {
@@ -215,7 +209,7 @@ const styles = ScaledSheet.create({
     height: '30@vs',
     fontSize: '22@s',
     fontWeight: 'bold',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
   },
   profilePic: {
     height: '40@vs',
@@ -226,6 +220,7 @@ const styles = ScaledSheet.create({
     overflow: 'hidden',
     resizeMode: 'contain',
   },
+  starsView: {flexDirection: 'row'},
   starsIcons: {
     height: '18@vs',
     width: '18@s',
@@ -233,14 +228,14 @@ const styles = ScaledSheet.create({
   },
   descriptionTitle: {
     fontSize: '22@s',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
     fontWeight: 'bold',
     marginTop: '24@vs',
     marginLeft: '24@s',
   },
   specsBar: {
     paddingRight: '26@s',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: Colors.white,
     borderRadius: '4@s',
     marginLeft: '20@s',
     flexDirection: 'row',
@@ -250,34 +245,33 @@ const styles = ScaledSheet.create({
     height: '24@s',
     marginLeft: '8@s',
     borderRadius: '4@s',
-    backgroundColor: 'rgba(228, 228, 231, 0.4)',
+    backgroundColor: Colors.lightGrey,
     alignItems: 'center',
   },
   specsTextStyle: {
     paddingVertical: '2@vs',
     paddingHorizontal: '12@vs',
     fontSize: '12@vs',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
   descriptionTextStyle: {
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 0.6)',
+    color: Colors.grey,
     fontWeight: '400',
     marginTop: '8@vs',
     marginLeft: '24@s',
     marginRight: '52@s',
   },
-
   aboutTextStyle: {
     fontSize: '16@s',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
     fontWeight: '700',
     marginTop: '16@vs',
     marginLeft: '24@s',
   },
   bottomMenu: {
     height: '106@vs',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -301,7 +295,7 @@ const styles = ScaledSheet.create({
     height: '48@vs',
     width: '152@s',
     borderRadius: '60@s',
-    backgroundColor: 'rgba(4, 159, 255, 1)',
+    backgroundColor: Colors.lightBlue,
     marginRight: '24@s',
     alignItems: 'center',
   },
@@ -309,7 +303,7 @@ const styles = ScaledSheet.create({
     fontSize: '14@s',
     fontWeight: '700',
     marginTop: '14@vs',
-    color: 'rgba(255, 255, 255, 1)',
+    color: Colors.white,
   },
 });
 

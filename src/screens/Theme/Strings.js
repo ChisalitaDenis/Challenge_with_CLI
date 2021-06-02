@@ -1,44 +1,44 @@
 export default {
   cardsComponent: {
     labels: {
-      miles: " miles",
-      perDay: " /per day",
-      currency: "$",
-      disponibility: " nights",
-      otherOffers: "Other Offers",
+      miles: ' miles',
+      perDay: ' /per day',
+      currency: '$',
+      disponibility: ' nights',
+      otherOffers: 'Other Offers',
     },
   },
   apartmentScreen: {
     labels: {
-      dot: "⬤",
-      specification: "Specifications",
-      description: "Description",
-      about: "About this space",
-      perNight: "/night",
+      dot: '⬤',
+      specification: 'Specifications',
+      description: 'Description',
+      about: 'About this space',
+      perNight: '/night',
     },
     buttons: {
-      booking: "Booking",
+      booking: 'Booking',
     },
   },
   profile: {
     labels: {
-      line: "____",
+      line: '____',
     },
     buttons: {
-      rentHistory: "Rent History",
-      settings: "Settings",
+      rentHistory: 'Rent History',
+      settings: 'Settings',
     },
   },
   head: {
     labels: {
-      searchPlaceholder: "Search via City",
+      searchPlaceholder: 'Search via City',
     },
   },
-  holderprofile:{
-      labels:{
-          review:" Reviews",
-          speaks:"Speaks in ",
-          myApartments:"My apartments for rent"
-      }
-  }
+  holderprofile: {
+    labels: {
+      review: ' Reviews',
+      speaks: 'Speaks in ',
+      myApartments: 'My apartments for rent',
+    },
+  },
 };

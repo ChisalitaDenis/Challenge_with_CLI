@@ -8,38 +8,39 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  StatusBar,
   FlatList,
 } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
-import Strings from '../../screens/Theme/Strings';
-import Images from '../../screens/Theme/Images';
+import Strings from '../Theme/Strings';
+import Images from '../Theme/Images';
+import Colors from '../Theme/Colors';
 import Cards from '../../Components/Cards';
 import {getRentById, getHostProfile} from '../../Api/Yelp';
+import roots from '../../Navigator/roots';
 const {width} = Dimensions.get('window');
 
-const HolderProfile = ({navigation,route}) => {
-  const navigateToApartment = id => {
-    navigation.navigate('Apartment', {id});
-  };
+const HolderProfile = ({navigation, route}) => {
   const [holderProfile, setHolderProfile] = useState(null);
   const [rents, setRents] = useState([]);
+  useEffect(() => {
+    fetchHolderProfile(route.params.id);
+  }, [route.params.id]);
   const fetchHolderProfile = useCallback(
     async hostProfileID => {
       const data = await getHostProfile(hostProfileID);
       setHolderProfile(data);
-      getAllRents(data)
+      getAllRents(data);
     },
     [route.params.id],
   );
   const getAllRents = data => {
     const tempArray = [];
-    data.rents.map(async (item) => tempArray.push(await getRentById(item)));
+    data.rents.map(async item => tempArray.push(await getRentById(item)));
     setRents(tempArray);
   };
-  useEffect(() => {
-    fetchHolderProfile(route.params.id);
-  }, [route.params.id]);
+  const navigateToApartment = id => {
+    navigation.navigate(roots.Apartment, {id});
+  };
   const renderStars = item => {
     return new Array(item.stars).fill(0).map(() => {
       return <Image style={styles.starsIcons} source={Images.starIcon}></Image>;
@@ -49,7 +50,6 @@ const HolderProfile = ({navigation,route}) => {
     item => {
       return (
         <View style={styles.mainView}>
-           {console.log("rents",rents)}
           <ImageBackground
             style={styles.backgroundPictureStyle}
             source={{uri: item.coverImage}}>
@@ -106,35 +106,31 @@ const HolderProfile = ({navigation,route}) => {
               {Strings.holderprofile.labels.myApartments}
             </Text>
             <FlatList
-            style={styles.cardList}
-            contentContainerStyle={styles.cardListContainer}
-            showsVerticalScrollIndicator={false}
-            numColumns={1}
-            data={rents}
-            renderItem={({ item }) => {
-              <Cards
-              item={item}
-              navigateToApartment={navigateToApartment}/>
-            }}
-          ></FlatList>
+              style={styles.cardList}
+              contentContainerStyle={styles.cardListContainer}
+              showsVerticalScrollIndicator={false}
+              numColumns={1}
+              data={rents}
+              renderItem={({item}) => {
+                <Cards item={item} navigateToApartment={navigateToApartment} />;
+              }}></FlatList>
           </ScrollView>
         </View>
       );
     },
-    [route.params.id,rents],
+    [route.params.id, rents],
   );
   return (
     <SafeAreaView style={styles.mainView}>
-      {holderProfile&& rents && renderData(holderProfile)}
+      {holderProfile && rents && renderData(holderProfile)}
     </SafeAreaView>
   );
 };
 
 const styles = ScaledSheet.create({
   mainView: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: Colors.white,
     flex: 1,
-    marginTop: '10@vs',
   },
   backgroundPictureStyle: {
     width,
@@ -142,15 +138,15 @@ const styles = ScaledSheet.create({
     resizeMode: 'contain',
   },
   profilePictureView: {
-    borderRadius: "40@s",
+    borderRadius: '40@s',
   },
   profilePictureStyle: {
-    height: '78@vs',
-    width: '78@s',
+    height: '80@vs',
+    width: '80@s',
     borderRadius: '40@s',
     marginLeft: '24@s',
     marginTop: '64@vs',
-    resizeMode:'cover'
+    resizeMode: 'cover',
   },
   backButton: {
     height: '40@vs',
@@ -172,7 +168,7 @@ const styles = ScaledSheet.create({
     height: '30@vs',
     fontSize: '22@s',
     fontWeight: '700',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
     marginLeft: '24@vs',
     marginTop: '16@vs',
   },
@@ -192,7 +188,7 @@ const styles = ScaledSheet.create({
     fontWeight: '400',
     paddingLeft: '4@s',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
   reviewView: {
     flexDirection: 'row',
@@ -204,7 +200,7 @@ const styles = ScaledSheet.create({
     fontSize: '12@s',
     fontWeight: '400',
     marginLeft: '8@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
   languagesView: {
     height: '20@vs',
@@ -216,7 +212,7 @@ const styles = ScaledSheet.create({
   },
   languagesText: {
     marginLeft: '14@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
   contactView: {
     marginLeft: '24@s',
@@ -230,20 +226,20 @@ const styles = ScaledSheet.create({
     marginLeft: '24@s',
     fontWeight: '400',
     fontSize: '20@s',
-    color: 'rgba(46, 48, 52, 0.2)',
+    color: Colors.lightGrey,
     marginLeft: '24@s',
   },
   aboutMeText: {
     fontWeight: '400',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
     marginLeft: '24@s',
     marginTop: '8@vs',
     paddingRight: '80@s',
   },
   forRent: {
     fontSize: '16@s',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
     fontWeight: '700',
     marginTop: '24@vs',
     marginLeft: '24@s',
@@ -273,13 +269,13 @@ const styles = ScaledSheet.create({
     height: '24@vs',
     marginLeft: '24@s',
     marginTop: '-16@vs',
-    backgroundColor: 'rgba(236, 107, 108, 1)',
+    backgroundColor: Colors.lightRed,
     alignItems: 'center',
     borderRadius: '4@s',
   },
   milesText: {
     fontSize: '14@s',
-    color: 'rgba(255, 255, 255, 1)',
+    color: Colors.white,
     paddingVertical: '2@vs',
   },
   detailsView: {
@@ -298,7 +294,7 @@ const styles = ScaledSheet.create({
     width: '42@s',
     height: '20@vs',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
     marginTop: '4@s',
     flex: 1,
     alignSelf: 'center',
@@ -307,7 +303,7 @@ const styles = ScaledSheet.create({
     width: '36@s',
     height: '20@vs',
     fontSize: '14@s',
-    color: 'rgba(4, 159, 255, 1)',
+    color: Colors.lightBlue,
     flex: 1,
   },
   locationCard: {
@@ -324,7 +320,7 @@ const styles = ScaledSheet.create({
     height: '20@vs',
     paddingLeft: '4@s',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
 });
 

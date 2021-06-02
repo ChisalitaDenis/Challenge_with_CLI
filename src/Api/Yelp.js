@@ -1,31 +1,28 @@
-import axios from "axios";
-import { get } from "react-native/Libraries/Utilities/PixelRatio";
+import axios from 'axios';
 
-const baseURL = "https://rent-challenge-api.herokuapp.com";
+const baseURL = 'https://rent-challenge-api.herokuapp.com';
 export default axios.create({});
 
 export const getAllRents = async () => {
-  const response = await axios.get(baseURL + "/rents");
+  const response = await axios.get(baseURL + '/rents');
   return response.data;
 };
 
-export const getRentById = async (id) => {
+export const getRentById = async id => {
   const response = await axios.get(baseURL + `/rents/${id}`);
   return response.data;
 };
 
-export const getHostProfile = async (id) => {
+export const getHostProfile = async id => {
   const response = await axios.get(baseURL + `/host/${id}`);
   return response.data;
 };
 
 const headers = {
-    'Content-Type': 'application/json',
-    'userToken': 'token123'
-  }
+  'Content-Type': 'application/json',
+  userToken: 'token123',
+};
 
 export const getRenterProfile = async () => {
- return await axios
-    .post(baseURL + `/user`, {},{headers:headers})
-    
+  return await axios.post(baseURL + `/user`, {}, {headers: headers});
 };

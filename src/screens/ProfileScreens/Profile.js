@@ -8,24 +8,24 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
-  StatusBar,
   FlatList,
 } from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import Strings from '../Theme/Strings';
 import Images from '../Theme/Images';
+import Colors from '../Theme/Colors';
 import Cards from '../../Components/Cards';
 import {getRentById, getRenterProfile} from '../../Api/Yelp';
-
+import roots from '../../Navigator/roots';
 const {width} = Dimensions.get('window');
 
-const Profile = ({navigation, route}) => {
-  const navigateToApartment = id => {
-    navigation.navigate('Apartment', {id});
-  };
+const Profile = ({navigation}) => {
   const [myProfile, setMyProfile] = useState(null);
   const [rents, setRents] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  useEffect(() => {
+    fetchProfile();
+  }, []);
   const fetchProfile = useCallback(async () => {
     const data = await getRenterProfile();
     setMyProfile(data.data);
@@ -39,16 +39,11 @@ const Profile = ({navigation, route}) => {
     setRents(tempArray);
     setLoading(false);
   };
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
+  const navigateToApartment = id => {
+    navigation.navigate(roots.Apartment, {id});
+  };
   const renderData = useCallback(
     (item, apartments) => {
-      console.log('loading', isLoading);
-      console.log('profile', item);
-      console.log('apps', apartments);
-
       return (
         <View style={styles.mainView}>
           <ImageBackground
@@ -70,7 +65,7 @@ const Profile = ({navigation, route}) => {
               <Text style={styles.userNameTextStyle}>{item.name}</Text>
             </View>
           </ImageBackground>
-          <ScrollView style={{marginTop: 10}}>
+          <ScrollView style={styles.locationContainer}>
             <View style={styles.locationView}>
               <Image
                 style={styles.locationIcon}
@@ -91,7 +86,6 @@ const Profile = ({navigation, route}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-
             <FlatList
               style={styles.cardList}
               contentContainerStyle={styles.cardListContainer}
@@ -100,7 +94,6 @@ const Profile = ({navigation, route}) => {
               keyExtractor={apartments => apartments.id}
               data={apartments}
               renderItem={({item}) => {
-                console.log('nr item', item);
                 return (
                   <Cards
                     item={item}
@@ -123,7 +116,7 @@ const Profile = ({navigation, route}) => {
 
 const styles = ScaledSheet.create({
   mainView: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: Colors.white,
     flex: 1,
     marginTop: '10@vs',
   },
@@ -163,10 +156,11 @@ const styles = ScaledSheet.create({
     height: '30@vs',
     fontSize: '22@s',
     fontWeight: '700',
-    color: 'rgba(46, 48, 52, 1)',
+    color: Colors.darkGrey,
     marginLeft: '10@vs',
     marginTop: '110@vs',
   },
+  locationContainer: {marginTop: 10},
   locationView: {
     height: '20@vs',
     flexDirection: 'row',
@@ -184,18 +178,18 @@ const styles = ScaledSheet.create({
     fontWeight: '400',
     paddingLeft: '4@s',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
   },
   lineText: {
     fontWeight: '400',
     fontSize: '20@s',
-    color: 'rgba(46, 48, 52, 0.2)',
+    color: Colors.grey,
     marginLeft: '24@s',
   },
   aboutMeText: {
     fontWeight: '400',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
     marginLeft: '24@s',
     marginTop: '8@vs',
   },
@@ -212,7 +206,7 @@ const styles = ScaledSheet.create({
   historySettingsText: {
     fontWeight: '700',
     fontSize: '14@s',
-    color: 'rgba(30, 31, 32, 1)',
+    color: Colors.darkGrey,
   },
   cardList: {
     width: '100%',
@@ -239,13 +233,13 @@ const styles = ScaledSheet.create({
     height: '24@vs',
     marginLeft: '24@s',
     marginTop: '-16@vs',
-    backgroundColor: 'rgba(236, 107, 108, 1)',
+    backgroundColor: Colors.lightRed,
     alignItems: 'center',
     borderRadius: '4@s',
   },
   milesText: {
     fontSize: '14@s',
-    color: 'rgba(255, 255, 255, 1)',
+    color: Colors.white,
     paddingVertical: '2@vs',
   },
   detailsView: {
@@ -265,7 +259,7 @@ const styles = ScaledSheet.create({
     width: '42@s',
     height: '20@vs',
     fontSize: '12@s',
-    color: 'rgba(143, 146, 161, 1)',
+    color: Colors.grey,
     marginTop: '4@s',
     flex: 1,
     alignSelf: 'center',
@@ -274,7 +268,7 @@ const styles = ScaledSheet.create({
     width: '36@s',
     height: '20@vs',
     fontSize: '14@s',
-    color: 'rgba(4, 159, 255, 1)',
+    color: Colors.lightBlue,
     flex: 1,
   },
   cardLocationView: {
