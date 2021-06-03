@@ -41,4 +41,18 @@ export default {
       myApartments: 'My apartments for rent',
     },
   },
+  signIn: {
+    labels: {
+      welcome: 'Welcome Back!',
+      logInMessage: 'Please, Log In',
+      emailPlaceHolder: 'johndoe@email.com',
+      passwordPlaceHolder: 'Password',
+      or: 'Or',
+      greater: '>',
+    },
+    buttons: {
+      continue: 'Continue',
+      register: "Don't have an account? Sign up",
+    },
+  },
 };

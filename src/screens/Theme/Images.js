@@ -25,4 +25,8 @@ export default {
   bedRoomsIcon: require('../../../assets/bedRoomsIcon.png'),
   bathRoomIcon: require('../../../assets/bathRoomIcon.png'),
   parkingIcon: require('../../../assets/parking.png'),
+  logInLogo: require('../../../assets/logInLogo.jpg'),
+  keyIcon: require('../../../assets/key.png'),
+  line: require('../../../assets/line.png'),
+  greater: require('../../../assets/greater.png'),
 };

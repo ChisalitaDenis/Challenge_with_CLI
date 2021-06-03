@@ -7,8 +7,8 @@ import roots from '../Navigator/roots';
 
 const BottomComponent = () => {
   const navigation = useNavigation();
-  const navigateToProfile = id => {
-    navigation.navigate(roots.MyProfile, {id});
+  const navigateToSignIn = id => {
+    navigation.navigate(roots.SignIn);
   };
   return (
     <View style={styles.buttons}>
@@ -23,7 +23,7 @@ const BottomComponent = () => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          navigateToProfile(1);
+          navigateToSignIn();
         }}>
         <ImageBackground style={styles.button} source={Images.profileIcon} />
       </TouchableOpacity>
